@@ -12,24 +12,25 @@ let distanceToObject: number
 basic.showIcon(IconNames.Happy)
 basic.pause(500)
 
-// to get the distance
-distanceToObject = sonar.ping(
-    DigitalPin.P1,
-    DigitalPin.P2,
-    PingUnit.Centimeters
-)
-basic.showString((distanceToObject).toString())
 
 // make the wheel to move
-while (distanceToObject >= 10) {
-    robotbit.StepperTurn(robotbit.Steppers.M1, robotbit.Turns.T1B4)
-    basic.pause(500)
-    robotbit.StepperTurn(robotbit.Steppers.M2, robotbit.Turns.T1B4)
+while (true) {
+    robotbit.StpCarMove(10, 48)
 
-    // to get the distance again
+    // checking the distance
     distanceToObject = sonar.ping(
         DigitalPin.P1,
         DigitalPin.P2,
         PingUnit.Centimeters
     )
+    
+    // stops when it's close to something
+    if (distanceToObject <= 10) {
+        robotbit.StpCarMove(0, 48)
+        basic.pause(500)
+        robotbit.StpCarMove(-10, 48)
+        basic.pause(500)
+        robotbit.StepperTurn(robotbit.Steppers.M1, robotbit.Turns.T1B4)
+        robotbit.StepperTurn(robotbit.Steppers.M2, robotbit.Turns.T1B4)
+    }
 }
